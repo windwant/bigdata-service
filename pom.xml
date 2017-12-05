@@ -22,29 +22,37 @@
       <scope>test</scope>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common -->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.hadoop</groupId>-->
+      <!--<artifactId>hadoop-common</artifactId>-->
+      <!--<version>2.9.0</version>-->
+    <!--</dependency>-->
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-hdfs &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.hadoop</groupId>-->
+      <!--<artifactId>hadoop-hdfs</artifactId>-->
+      <!--<version>2.9.0</version>-->
+    <!--</dependency>-->
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.hadoop</groupId>-->
+      <!--<artifactId>hadoop-mapreduce-client-core</artifactId>-->
+      <!--<version>2.9.0</version>-->
+    <!--</dependency>-->
+    <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client &ndash;&gt;-->
+    <!--<dependency>-->
+      <!--<groupId>org.apache.hadoop</groupId>-->
+      <!--<artifactId>hadoop-client</artifactId>-->
+      <!--<version>2.9.0</version>-->
+    <!--</dependency>-->
+
+    <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-core -->
     <dependency>
       <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
-      <version>2.9.0</version>
+      <artifactId>hadoop-core</artifactId>
+      <version>1.2.1</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-hdfs -->
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs</artifactId>
-      <version>2.9.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core -->
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-mapreduce-client-core</artifactId>
-      <version>2.9.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client -->
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-client</artifactId>
-      <version>2.9.0</version>
-    </dependency>
+
 
     <dependency>
       <groupId>org.slf4j</groupId>
