@@ -1,4 +1,4 @@
-package org.hadoop.test;
+package org.windwant.hadoop;
 
 import junit.framework.TestCase;
 

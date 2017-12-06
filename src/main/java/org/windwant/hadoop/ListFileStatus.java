@@ -1,4 +1,4 @@
-package org.hadoop.test;
+package org.windwant.hadoop;
 
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.hadoop.conf.Configuration;
@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.hadoop.test.ListFileStatus / /user/
- *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.hadoop.test.ListFileStatus hdfs://localhost:9000/ hdfs://localhost:9000/user/
+ *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.ListFileStatus / /user/
+ *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.ListFileStatus hdfs://localhost:9000/ hdfs://localhost:9000/user/
  */
 public class ListFileStatus {
     public static void main(String[] args) {
