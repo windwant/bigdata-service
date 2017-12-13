@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MyKafkaTopology {
+public class MyKafkaStorm {
 
     /**
      * 字符串分割=》
@@ -33,7 +33,7 @@ public class MyKafkaTopology {
     public static class SplitWordBolt extends BaseRichBolt {
 
         private static final Logger logger = LoggerFactory.getLogger(SplitWordBolt.class);
-        private static final long serialVersionUID = 886149197481637894L;
+        private static final long serialVersionUID = 886149895478467894L;
         private OutputCollector collector;
 
         @Override
@@ -62,20 +62,20 @@ public class MyKafkaTopology {
     }
 
     /**
-     * cal word
+     * 词算
      */
     public static class CountWordBold extends BaseRichBolt {
 
         private static final Logger logger = LoggerFactory.getLogger(CountWordBold.class);
-        private static final long serialVersionUID = 886149197481637894L;
+        private static final long serialVersionUID = 886148754599637894L;
         private OutputCollector collector;
-        private Map<String, AtomicInteger> counterMap;
+        private Map<String, AtomicInteger> statistic;
 
         @Override
         public void prepare(Map stormConf, TopologyContext context,
                             OutputCollector collector) {
             this.collector = collector;
-            this.counterMap = new HashMap<>();//计数Map
+            this.statistic = new HashMap<>();//计数Map
         }
 
         @Override
@@ -83,20 +83,20 @@ public class MyKafkaTopology {
             String word = input.getString(0);
             int count = input.getInteger(1);
             logger.info("receive data，word: {}, count: {}", word, count);
-            AtomicInteger wordCounter = this.counterMap.get(word);
+            AtomicInteger wordCounter = this.statistic.get(word);
             if(wordCounter == null) {
                 wordCounter = new AtomicInteger();
-                this.counterMap.put(word, wordCounter);
+                this.statistic.put(word, wordCounter);
             }
             wordCounter.addAndGet(count);
             collector.ack(input);
-            logger.info("word count map: {}", this.counterMap);
+            logger.info("word count map: {}", this.statistic);
         }
 
         @Override
         public void cleanup() {
             logger.info("final statistic result: ");
-            Iterator<Entry<String, AtomicInteger>> it = this.counterMap.entrySet().iterator();
+            Iterator<Entry<String, AtomicInteger>> it = this.statistic.entrySet().iterator();
             while(it.hasNext()) {
                 Entry<String, AtomicInteger> entry = it.next();
                 logger.info("word: {}, count: {}", entry.getKey(), entry.getValue().get());
@@ -109,28 +109,27 @@ public class MyKafkaTopology {
             declarer.declare(new Fields("word", "count"));
         }
     }
+    private static final String zkHost = "localhost:2181/kafka"; //zookeeper host
+    private static final String testTopic = "storm-topic"; //测试主题
+    private static final String zkRoot = "/kafka"; //zookeeper 根节点
+    private static final String ID = "word";
 
     public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException, InterruptedException {
-        String zks = "localhost:2181/kafka";
-        String topic = "storm-topic";
-        String zkRoot = "/kafka"; // storm zookeeper root
-        String id = "word";
 
-        BrokerHosts brokerHosts = new ZkHosts(zks, "/brokers");
-        SpoutConfig spoutConf = new SpoutConfig(brokerHosts, topic, zkRoot, id);
+        BrokerHosts brokerHosts = new ZkHosts(zkHost, "/brokers");
+        SpoutConfig spoutConf = new SpoutConfig(brokerHosts, testTopic, zkRoot, ID);
         spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
         spoutConf.forceFromStart = false;
-        spoutConf.zkServers = Arrays.asList(new String[] {"localhost"});
-        spoutConf.zkPort = 2181;
 
+        //TopologyBuilder是构建拓扑的类，用于指定执行的拓扑。拓扑底层是Thrift结构，由于Thrift API非常冗长，使用TopologyBuilder可以极大地简化建立拓扑的过程
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-reader", new KafkaSpout(spoutConf), 5);
+        builder.setSpout("kafka-reader", new KafkaSpout(spoutConf), 5);//id为kafka-reader 并行度为5
         builder.setBolt("word-splitter", new SplitWordBolt(), 2).shuffleGrouping("kafka-reader");
         builder.setBolt("word-counter", new CountWordBold()).fieldsGrouping("word-splitter", new Fields("word"));
 
         Config conf = new Config();
 
-        String name = MyKafkaTopology.class.getSimpleName();
+        String name = MyKafkaStorm.class.getSimpleName();
         if (args != null && args.length > 0) {
             conf.put(Config.NIMBUS_HOST, args[0]);
             conf.setNumWorkers(3);
