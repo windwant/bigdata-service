@@ -45,6 +45,8 @@ kafka：测试 producer | consumer
 
     查询topic：> bin/kafka-topics.sh --list --zookeeper localhost:2181
 
-storm：kafka集成storm
+storm：kafka集成storm集成hdfs
+
+读取kafka数据=》storm实时处理（分割字符，统计字符）=》写入hdfs
 
 
