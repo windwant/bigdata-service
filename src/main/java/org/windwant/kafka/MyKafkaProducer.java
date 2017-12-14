@@ -7,15 +7,21 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.windwant.Constants;
+import org.windwant.util.BLogger;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Created by aayongche on 2016/9/12.
+ * Kafka producer
+ *
  */
 public class MyKafkaProducer {
+    public static final Logger logger = LoggerFactory.getLogger(MyKafkaProducer.class);
+
     private static final String[] cities = new String[]{""};
 
     private Properties props;
@@ -38,9 +44,8 @@ public class MyKafkaProducer {
         try {
             Producer<String, String> producer = new KafkaProducer<>(props);
             for(int i = 0; i < Integer.MAX_VALUE; i++) {
-                RecordMetadata result = producer.send(new ProducerRecord<>("storm-topic",
-                        "msg", Constants.getRandomCity())).get();
-                System.out.println("producer send: " + result);
+                ProducerRecord record = new ProducerRecord<>("storm-topic", "msg", Constants.getRandomCity());
+                logger.info("producer send, result: {}, msg: {}", producer.send(record).get(), record);
                 Thread.sleep(1000);
             }
             producer.close();

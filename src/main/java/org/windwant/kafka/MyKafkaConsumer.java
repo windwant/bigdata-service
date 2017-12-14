@@ -6,14 +6,18 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Properties;
 
 /**
- * Created by aayongche on 2016/9/13.
+ * Kafka consumer
  */
 public class MyKafkaConsumer {
+    public static final Logger logger = LoggerFactory.getLogger(MyKafkaConsumer.class);
+
     private Properties props;
     public static void main(String[] args) throws ConfigurationException {
         new MyKafkaConsumer().start();
@@ -37,8 +41,7 @@ public class MyKafkaConsumer {
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
-                System.out.printf(record.toString());
-                System.out.println();
+                logger.info(record.toString());
             }
         }
     }

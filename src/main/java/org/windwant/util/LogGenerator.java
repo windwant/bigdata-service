@@ -1,4 +1,4 @@
-package org.windwant.hadoop;
+package org.windwant.util;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
