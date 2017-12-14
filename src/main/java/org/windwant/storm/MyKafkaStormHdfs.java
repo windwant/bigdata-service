@@ -29,7 +29,15 @@ import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 读取kafka数据=》storm实时处理（分割字符，统计字符）=》写入hdfs
+ * kafka消息生成方式：
+ *   1. LogGenerator生成测试日志发送到flume=》
+ *   2. MyKafkaProducer发送测试消息
+ *
+ * MyKafkaStormHdfs 实时处理消息：
+ *   =》读取kafka数据
+ *   =》storm实时处理（分割字符，统计字符）
+ *   =》写入hdfs
+ *
  * 注意各依赖的版本问题
  */
 public class MyKafkaStormHdfs {

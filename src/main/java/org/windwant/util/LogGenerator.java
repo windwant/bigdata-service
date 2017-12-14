@@ -3,12 +3,18 @@ package org.windwant.util;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.windwant.Constants;
 
 import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Administrator on 2017/12/5.
+ *
+ * 测试日志生成 发送到flume
+ *
+ * flume windows 启动命令: .\flume-ng.cmd agent --conf ..\conf --conf-file ..\conf\flume-conf.properties --name a1
+ *
  */
 public class LogGenerator {
     public static final Logger logger = LoggerFactory.getLogger(LogGenerator.class);
@@ -38,7 +44,7 @@ public class LogGenerator {
 
     public static void main(String[] args) {
         while (true){
-            logger.info("message: {}", ThreadLocalRandom.current().nextInt());
+            logger.info("msg: {}", Constants.getRandomCity());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

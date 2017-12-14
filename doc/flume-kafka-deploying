@@ -1,0 +1,190 @@
+flume 整合 kafka：
+flume 采集业务日志，发送到kafka
+
+安装部署Kafka
+Download
+1.0.0 is the latest release. The current stable version is 1.0.0.
+You can verify your download by following these procedures and using these KEYS.
+1.0.0
+	* Released November 1, 2017
+	* Source download: kafka-1.0.0-src.tgz (asc, sha512)
+	* Binary downloads:
+
+		* Scala 2.11  - kafka_2.11-1.0.0.tgz (asc, sha512)
+		* Scala 2.12  - kafka_2.12-1.0.0.tgz (asc, sha512)
+We build for multiple versions of Scala. This only matters if you are using Scala and you want a version built for the same Scala version you use. Otherwise any version should work (2.11 is recommended).
+
+
+1.解压：tar zxvf kafka_2.11-1.0.0.tgz
+
+2.部署目录：mv kafka_2.12-1.0.0 /usr/local/kafka2.12
+
+3.启动zookeeper ....
+
+4.启动kafka：
+#nohup bin/kafka-server-start.sh config/server.properties &
+5.创建topic：
+#bin/kafka-topics.sh --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic test
+Created topic "test".
+6.查看topic：
+# bin/kafka-topics.sh --list --zookeeper localhost:2181
+__consumer_offsets
+test
+7.测试发送数据
+#bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+输入：my test
+
+8.测试消费消息：
+#bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+
+安装部署flume
+flume下载：
+
+Download
+Apache Flume is distributed under the Apache License, version 2.0
+The link in the Mirrors column should display a list of available mirrors with a default selection based on your inferred location. If you do not see that page, try a different browser. The checksum and signature are links to the originals on the main distribution server.
+Apache Flume binary (tar.gz)
+apache-flume-1.8.0-bin.tar.gz
+apache-flume-1.8.0-bin.tar.gz.md5
+apache-flume-1.8.0-bin.tar.gz.sha1
+apache-flume-1.8.0-bin.tar.gz.asc
+Apache Flume source (tar.gz)
+apache-flume-1.8.0-src.tar.gz
+apache-flume-1.8.0-src.tar.gz.md5
+apache-flume-1.8.0-src.tar.gz.sha1
+apache-flume-1.8.0-src.tar.gz.asc
+It is essential that you verify the integrity of the downloaded files using the PGP or MD5 signatures. Please read Verifying Apache HTTP Server Releases for more information on why you should verify our releases.
+
+1.下载：wget apache-flume-1.8.0-bin.tar.gz
+
+2.解压：tar zxvf apache-flume-1.8.0-bin.tar.gz
+
+3.设置目录：mv apache-flume-1.8.0-bin /usr/local/flume1.8
+
+4.准备工作：
+安装java并设置java环境变量,flume环境变量，在`/etc/profile`中加入
+
+export JAVA_HOME=/usr/java/jdk1.8.0_65
+export FLUME_HOME=/usr/local/flume1.8
+export PATH=$PATH:$JAVA_HOME/bin:$FLUME_HOME
+
+执行：source /etc/profile 生效变量
+5.建立log采集目录：
+/tmp/logs/kafka.log
+6.配置
+拷贝配置模板：
+# cp conf/flume-conf.properties.template conf/flume-conf.properties
+# cp conf/flume-env.properties.template conf/flume-env.properties
+编辑配置如下：
+agent.sources = s1
+agent.channels = c1
+agent.sinks = k1
+
+agent.sources.s1.type=exec
+#日志采集位置
+agent.sources.s1.command=tail -F /tmp/logs/kafka.log
+agent.sources.s1.channels=c1
+agent.channels.c1.type=memory
+agent.channels.c1.capacity=10000
+agent.channels.c1.transactionCapacity=100
+
+agent.sinks.k1.type= org.apache.flume.sink.kafka.KafkaSink
+#kafka 地址
+agent.sinks.k1.brokerList=localhost:9092
+#kafka topic
+agent.sinks.k1.topic=test
+agent.sinks.k1.serializer.class=kafka.serializer.StringEncoder
+
+agent.sinks.k1.channel=c1
+windows 启动命令: .\flume-ng.cmd agent --conf ..\conf --conf-file ..\conf\flume-conf.properties --name a1
+
+接收log4j日志输出到文件配置如下：
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+# Describe/configure the source
+a1.sources.r1.type = avro
+a1.sources.r1.bind = localhost
+a1.sources.r1.port = 4444
+
+# Describe the sink
+a1.sinks.k1.type = file_roll
+a1.sinks.k1.sink.directory = d:/flume
+a1.sinks.k1.sink.rollInterval=86400
+a1.sinks.k1.sink.batchSize=100
+a1.sinks.k1.sink.serializer=text
+a1.sinks.k1.sink.serializer.appendNewline = false
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 1000
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+接收log4j日志输出到kafka配置如下：
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+# Describe/configure the source
+a1.sources.r1.type = avro
+a1.sources.r1.bind = localhost
+a1.sources.r1.port = 4444
+
+# Describe the sink
+a1.sinks.k1.type=org.apache.flume.sink.kafka.KafkaSink
+a1.sinks.k1.brokerList=localhost:9092
+a1.sinks.k1.topic=storm-topic
+a1.sinks.k1.transactionCapacity = 1000
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 1000
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+接收log4j日志输出到hadoop配置如下：
+a1.sources = r1
+a1.sinks = k1
+a1.channels = c1
+
+# Describe/configure the source
+a1.sources.r1.type = avro
+a1.sources.r1.bind = localhost
+a1.sources.r1.port = 4444
+
+# Describe the sink
+a1.sinks.k1.type=hdfs
+a1.sinks.k1.hdfs.path=hdfs://localhost:9000/user/flume
+a1.sinks.k1.hdfs.fileType=DataStream
+a1.sinks.k1.hdfs.writeFormat=Text
+a1.sinks.k1.hdfs.rollInterval=0
+a1.sinks.k1.hdfs.rollSize=10240
+a1.sinks.k1.hdfs.rollCount=0
+a1.sinks.k1.hdfs.idleTimeout=60
+
+# Use a channel which buffers events in memory
+a1.channels.c1.type = memory
+a1.channels.c1.capacity = 1000
+a1.channels.c1.transactionCapacity = 1000
+
+# Bind the source and sink to the channel
+a1.sources.r1.channels = c1
+a1.sinks.k1.channel = c1
+功能验证7.启动服务
+# bin/flume-ng agent --conf ./conf/ -f conf/kafka.properties -Dflume.root.logger=DEBUG,console -n agent
+运行日志位于logs目录，或者启动时添加-Dflume.root.logger=INFO,console 选项前台启动，输出打印日志，查看具体运行日志，服务异常时查原因。
+8.创建测试日志生成：log_producer_test.sh
+for((i=0;i<=1000;i++));
+do echo "kafka_flume_test-"+$i>>/tmp/logs/kafka.log;
+do
+
+9.生成日志：
+./log_producer_test.sh
+
+观察kafka日志消费情况。。。
