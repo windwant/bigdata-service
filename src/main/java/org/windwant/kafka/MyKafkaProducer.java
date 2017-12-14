@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutionException;
  * Created by aayongche on 2016/9/12.
  */
 public class MyKafkaProducer {
-
     private static final String[] cities = new String[]{""};
 
     private Properties props;
