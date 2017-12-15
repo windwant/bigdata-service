@@ -1,4 +1,4 @@
-package org.windwant;
+package org.windwant.common;
 
 import java.util.concurrent.ThreadLocalRandom;
 

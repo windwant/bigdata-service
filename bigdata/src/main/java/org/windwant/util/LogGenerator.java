@@ -3,10 +3,9 @@ package org.windwant.util;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.windwant.Constants;
+import org.windwant.common.Constants;
 
 import java.util.Properties;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Administrator on 2017/12/5.
