@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * kafka消息生成方式：
  *   1. LogGenerator生成测试日志发送到flume=》
  *   2. MyKafkaProducer发送测试消息
+ *   3. elasticjob定时任务模块生成测试日志
  *
  * MyKafkaStormHdfs 实时处理消息：
  *   =》读取kafka数据

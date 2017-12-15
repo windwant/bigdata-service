@@ -30,6 +30,8 @@ kafka集成storm集成hdfs
 
  *   2. MyKafkaProducer发送测试消息
 
+ *   3. elasticjob定时任务模块生成测试日志
+
 
  * MyKafkaStormHdfs 实时处理消息：
 
