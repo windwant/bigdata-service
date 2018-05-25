@@ -1,4 +1,4 @@
-package org.windwant.storm;
+package org.windwant.bigdata.storm;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;

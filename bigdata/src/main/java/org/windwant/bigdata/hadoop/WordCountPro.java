@@ -1,4 +1,4 @@
-package org.windwant.hadoop;
+package org.windwant.bigdata.hadoop;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

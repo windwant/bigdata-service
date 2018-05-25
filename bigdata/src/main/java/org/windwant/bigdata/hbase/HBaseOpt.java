@@ -1,4 +1,4 @@
-package org.windwant.hbase;
+package org.windwant.bigdata.hbase;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 /**
  * hbase 基本操作
- * jar包置于hbase文件夹下 执行：java -cp lib/*:hadoop-test-1.0-SNAPSHOT.jar org.windwant.hbase.HBaseOpt
+ * jar包置于hbase文件夹下 执行：java -cp lib/*:hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hbase.HBaseOpt
  * Created by Administrator on 2017/12/7.
  */
 public class HBaseOpt {

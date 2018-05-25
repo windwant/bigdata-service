@@ -1,4 +1,4 @@
-package org.windwant.kafka;
+package org.windwant.bigdata.kafka;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;

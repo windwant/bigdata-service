@@ -1,4 +1,4 @@
-package org.windwant.hadoop;
+package org.windwant.bigdata.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -12,8 +12,8 @@ import java.net.URI;
 
 /**
  * hdfs 添加文件
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.WriteHdfsFile etc/hadoop/capacity-scheduler.xml input/test/cs.xml
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.WriteHdfsFile etc/hadoop/capacity-scheduler.xml hdfs://localhost:9000/user/roger/haddop/cs.xml
+ * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.WriteHdfsFile etc/hadoop/capacity-scheduler.xml input/test/cs.xml
+ * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.WriteHdfsFile etc/hadoop/capacity-scheduler.xml hdfs://localhost:9000/user/roger/haddop/cs.xml
  */
 public class WriteHdfsFile {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.windwant.hadoop;
+package org.windwant.bigdata.hadoop;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * 执行文件次数统计
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.WordCount input/hadoop output3
+ * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.WordCount input/hadoop output3
  */
 public class WordCount {
 

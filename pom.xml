@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.windwant</groupId>
-  <artifactId>bigdata-demo</artifactId>
+  <artifactId>bigdata-service</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -13,7 +13,7 @@
     <module>common-util</module>
   </modules>
 
-  <name>bigdata-demo</name>
+  <name>bigdata-service</name>
   <url>http://maven.apache.org</url>
 
   <properties>

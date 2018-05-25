@@ -1,4 +1,4 @@
-package org.windwant.hadoop;
+package org.windwant.bigdata.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -15,7 +15,7 @@ import java.net.URL;
 
 /**
  * 执行文件读取
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.ReadHdfsFile input/hadoop/capacity-scheduler.xm
+ * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.ReadHdfsFile input/hadoop/capacity-scheduler.xm
  */
 public class ReadHdfsFile {
     static {

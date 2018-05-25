@@ -1,4 +1,4 @@
-package org.windwant.flume;
+package org.windwant.bigdata.flume;
 
 import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;

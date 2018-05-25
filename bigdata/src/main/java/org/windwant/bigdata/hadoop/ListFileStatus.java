@@ -1,6 +1,5 @@
-package org.windwant.hadoop;
+package org.windwant.bigdata.hadoop;
 
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
@@ -11,8 +10,8 @@ import java.io.IOException;
 import java.net.URI;
 
 /**
- *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.ListFileStatus / /user/
- *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.hadoop.ListFileStatus hdfs://localhost:9000/ hdfs://localhost:9000/user/
+ *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.ListFileStatus / /user/
+ *  bin/hadoop jar E:\javapro\hadoop-test\target\hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.ListFileStatus hdfs://localhost:9000/ hdfs://localhost:9000/user/
  */
 public class ListFileStatus {
     public static void main(String[] args) {
