@@ -15,7 +15,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 /**
  * 执行文件次数统计
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.WordCount input/hadoop output3
+ * bin/hadoop jar bigdata-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.WordCount input/hadoop output3
  */
 public class WordCount {
 
@@ -51,7 +51,14 @@ public class WordCount {
         }
     }
 
+    public static final String[] path = new String[]{"hdfs://localhost:9000/test/hadoop/capacity-scheduler.xml", "hdfs://localhost:9000/test/out/"};
+
     public static void main(String[] args) throws Exception {
+        if(args == null || args.length < 2){
+            args = path;
+        }
+        args[1] = args[1] + System.currentTimeMillis();
+
         Configuration conf = new Configuration();
         Job job = Job.getInstance(conf, "word count");
         job.setJarByClass(WordCount.class);
@@ -62,6 +69,11 @@ public class WordCount {
         job.setOutputValueClass(IntWritable.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        if(job.waitForCompletion(true)){
+            //结果显示
+            HdfsFileOp.readHdfsFile(args[1] + "/part-r-00000");
+            System.exit(0);
+        }
+        System.exit(1);
     }
 }

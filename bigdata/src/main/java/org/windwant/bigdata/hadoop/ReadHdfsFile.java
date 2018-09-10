@@ -15,16 +15,18 @@ import java.net.URL;
 
 /**
  * 执行文件读取
- * bin/hadoop jar hadoop-test-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.ReadHdfsFile input/hadoop/capacity-scheduler.xm
+ * bin/hadoop jar bigdata-1.0-SNAPSHOT.jar org.windwant.bigdata.hadoop.ReadHdfsFile input/hadoop/capacity-scheduler.xm
  */
 public class ReadHdfsFile {
     static {
         URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
     }
 
-    public static String FILE_URL = "hdfs://192.168.7.138:50070/input/hadoop/capacity-scheduler.xml";
+    public static String FILE_URL = "hdfs://localhost:9000/test/hadoop/capacity-scheduler.xml";
     public static void main(String[] args) {
-        FILE_URL = args[0];
+        if(args != null && args.length > 1) {
+            FILE_URL = args[0];
+        }
         InputStream in = null;
         FSDataInputStream fin = null;
         try{

@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
-    <Properties>
-        <Property name="log-path">${logPath}</Property>
-        <Property name="log-level">${logLevel}</Property>
-    </Properties>
-
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout
                     pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="RollingFile" fileName="${log-path}/logs/bigdata.log"
-                     filePattern="${log-path}/${date:yyyy-MM}/bigdata-%d{MM-dd-yyyy}-%i.log.gz">
+        <RollingFile name="RollingFile" fileName="logs/bigdata.log"
+                     filePattern="logs/${date:yyyy-MM}/bigdata-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout charset="UTF-8"
                            pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n"/>
             <Policies>
@@ -28,6 +23,6 @@
             <appender-ref ref="console"/>
             <appender-ref ref="RollingFile"/>
         </root>
-        <Logger name="org.windwant.bigdata" level="${log-level}"/>
+        <Logger name="org.windwant.bigdata" level="info"/>
     </Loggers>
 </Configuration>

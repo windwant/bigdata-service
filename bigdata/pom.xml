@@ -24,7 +24,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
-      <version>2.9.0</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-hdfs</artifactId>
-      <version>2.9.0</version>
+      <version>3.1.1</version>
     </dependency>
     <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-mapreduce-client-core &ndash;&gt;-->
     <!--<dependency>-->
@@ -48,7 +48,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-client</artifactId>
-      <version>2.9.0</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
@@ -61,7 +61,7 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-auth</artifactId>
-      <version>2.9.0</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
@@ -198,6 +198,21 @@
             <source>1.8</source>
             <target>1.8</target>
             <compilerVersion>1.8</compilerVersion>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+          <configuration>
+            <encoding>utf-8</encoding>
+            <useDefaultDelimiters>true</useDefaultDelimiters>
+            <resources>
+              <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+              </resource>
+            </resources>
           </configuration>
         </plugin>
       </plugins>

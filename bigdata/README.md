@@ -1,4 +1,4 @@
-# bigdata-test
+# bigdata-service
 
 hadoop:
 
