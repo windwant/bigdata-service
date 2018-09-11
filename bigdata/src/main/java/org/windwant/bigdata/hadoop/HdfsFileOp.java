@@ -5,6 +5,8 @@ import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.util.Progressable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -145,5 +147,33 @@ public class HdfsFileOp {
             IOUtils.closeStream(in);
             IOUtils.closeStream(fin);
         }
+    }
+
+    /**
+     * 删除 文件 文件夹
+     * @param path
+     */
+    public static void deleteFile(String path){
+        FileSystem fs = null;
+        try {
+            fs = FileSystem.get(URI.create(path), new Configuration());
+            fs.delete(new Path(path), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(fs != null){
+                try {
+                    fs.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static final Logger logger = LoggerFactory.getLogger(HdfsFileOp.class);
+    public static void main(String[] args) {
+        readHdfsFile("hdfs://localhost:9000/test/hadoop/core-site.xml");
+        logger.info("read hdfs file content");
     }
 }

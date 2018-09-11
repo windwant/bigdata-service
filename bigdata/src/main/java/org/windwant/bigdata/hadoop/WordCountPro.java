@@ -48,7 +48,8 @@ public class WordCountPro {
             conf = context.getConfiguration();
             caseSensitive = conf.getBoolean("wordcount.case.sensitive", true);
             if (conf.getBoolean("wordcount.skip.patterns", false)) {
-                URI[] patternsURIs = DistributedCache.getCacheArchives(conf) ;//Job.getInstance(conf).getCacheFiles();
+                URI[] patternsURIs = Job.getInstance(conf).getCacheFiles();
+//                URI[] patternsURIs = DistributedCache.getCacheArchives(conf) ;//Job.getInstance(conf).getCacheFiles();
                 for (URI patternsURI : patternsURIs) {
                     Path patternsPath = new Path(patternsURI.getPath());
                     String patternsFileName = patternsPath.getName().toString();
@@ -105,13 +106,8 @@ public class WordCountPro {
             context.write(key, result);
         }
     }
-    public static final String[] path = new String[]{"hdfs://localhost:9000/test/hadoop/capacity-scheduler.xml", "hdfs://localhost:9000/test/out/"};
 
-    public static void main(String[] args) throws Exception {
-        if(args == null || args.length < 2){
-            args = path;
-        }
-        args[1] = args[1] + System.currentTimeMillis();
+    public static Job configJob(String[] args) throws IOException {
         Configuration conf = new Configuration();
         GenericOptionsParser optionParser = new GenericOptionsParser(conf, args);
         String[] remainingArgs = optionParser.getRemainingArgs();
@@ -130,7 +126,8 @@ public class WordCountPro {
         List<String> otherArgs = new ArrayList<String>();
         for (int i=0; i < remainingArgs.length; ++i) {
             if ("-skip".equals(remainingArgs[i])) {
-                DistributedCache.addCacheFile(new Path(remainingArgs[++i]).toUri(), job.getConfiguration());
+                job.addCacheFile(new Path(remainingArgs[++i]).toUri());
+//                DistributedCache.addCacheFile(new Path(remainingArgs[++i]).toUri(), job.getConfiguration());
                 job.getConfiguration().setBoolean("wordcount.skip.patterns", true);
             } else {
                 otherArgs.add(remainingArgs[i]);
@@ -138,7 +135,17 @@ public class WordCountPro {
         }
         FileInputFormat.addInputPath(job, new Path(otherArgs.get(0)));
         FileOutputFormat.setOutputPath(job, new Path(otherArgs.get(1)));
+        return job;
+    }
 
+    public static final String[] path = new String[]{"hdfs://localhost:9000/test/hadoop/capacity-scheduler.xml", "hdfs://localhost:9000/test/out/"};
+
+    public static void main(String[] args) throws Exception {
+        if(args == null || args.length < 2){
+            args = path;
+        }
+        args[1] = args[1] + System.currentTimeMillis();
+        Job job = configJob(args);
         if(job.waitForCompletion(true)){
             //结果显示
             HdfsFileOp.readHdfsFile(args[1] + "/part-r-00000");
