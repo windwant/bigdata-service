@@ -1,12 +1,13 @@
 package org.windwant.common;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Administrator on 2017/12/13.
  */
 public class Constants {
-    private static final String[] cityString = { "北京市","天津市","石家庄市","唐山市","秦皇岛市","邯郸市","邢台市","保定市","张家口市","承德市","衡水市","廊坊市","沧州市","太原市","大同市","阳泉市","长治市","晋城市","朔州市","晋中市","运城市","忻州市",
+    private static final String[] cityString = new String[]{ "北京市","天津市","石家庄市","唐山市","秦皇岛市","邯郸市","邢台市","保定市","张家口市","承德市","衡水市","廊坊市","沧州市","太原市","大同市","阳泉市","长治市","晋城市","朔州市","晋中市","运城市","忻州市",
             "临汾市","吕梁市","呼和浩特市","包头市","乌海市","赤峰市","通辽市","鄂尔多斯市","呼伦贝尔市","巴彦淖尔市","乌兰察布市","兴安盟","锡林郭勒盟","阿拉善盟","沈阳市","大连市","鞍山市","抚顺市","本溪市","丹东市",
             "锦州市","营口市","阜新市","辽阳市","盘锦市","铁岭市","朝阳市","葫芦岛市","长春市","吉林市","四平市","辽源市","通化市","白山市","松原市","白城市","延边朝鲜族自治州","哈尔滨市","齐齐哈尔市","鸡西市",
             "鹤岗市","双鸭山市","大庆市","伊春市","佳木斯市","七台河市","牡丹江市","黑河市","绥化市","大兴安岭地区","上海市","南京市","无锡市","徐州市","常州市","苏州市","南通市","连云港市","淮安市","盐城市",
@@ -29,6 +30,8 @@ public class Constants {
             "南投县","云林县","嘉义县","台南县","高雄县","屏东县","澎湖县","台东县","花莲县","中西区","东区","九龙城区","观塘区","南区","深水埗区","黄大仙区","湾仔区","油尖旺区","离岛区","葵青区","北区",
             "西贡区","沙田区","屯门区","大埔区","荃湾区","元朗区","澳门特别行政区","海外"};
 
+    public static String[] METHOD = new String[]{"POST", "GET", "PUT", "OPTION","TRACE"};
+
     public static String getRandomCity(){
         int size = cityString.length;
         int width = ThreadLocalRandom.current().nextInt(1, size);
@@ -39,10 +42,55 @@ public class Constants {
         return rst;
     }
 
+    public static String getRandomCity(int n){
+        int width = ThreadLocalRandom.current().nextInt(1, n);
+        String rst = "";
+        for (int i = 0; i < width; i++) {
+            rst += cityString[ThreadLocalRandom.current().nextInt(n)] + " ";
+        }
+        return rst;
+    }
+
+    public static String getRandomMethod(){
+        return METHOD[ThreadLocalRandom.current().nextInt(METHOD.length)];
+    }
+
+    public static StringBuilder ip = new StringBuilder();
+
+    public static String genRandomIp() {
+        return ip.delete(0, ip.length())
+                .append(ThreadLocalRandom.current().nextInt(255))
+                .append(".")
+                .append(ThreadLocalRandom.current().nextInt(255))
+                .append(".")
+                .append(ThreadLocalRandom.current().nextInt(255))
+                .append(".")
+                .append(ThreadLocalRandom.current().nextInt(255))
+                .toString();
+
+    }
+    static final String[] root = new String[]{"/login", "/logout", "/order", "/resource"};
+    public static String genRandomPath(){
+        return root[ThreadLocalRandom.current().nextInt(4)];
+    }
+
+    public static StringBuilder request = new StringBuilder();
+    public static String genRandomRequest(){
+        return request.delete(0, request.length())
+                .append("http://")
+                .append(genRandomIp())
+                .append(genRandomPath())
+                .toString();
+    }
+
+    public static SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String getFormatDateTime(){
+        return f.format(System.currentTimeMillis());
+    }
+
     public static void main(String[] args) {
         for (int i = 0; i < cityString.length; i++) {
             System.out.println(getRandomCity());
         }
-
     }
 }

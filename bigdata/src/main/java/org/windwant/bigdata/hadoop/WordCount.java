@@ -10,7 +10,6 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -60,13 +59,12 @@ public class WordCount {
         job.setJarByClass(WordCount.class);
         //处理Mapper
         job.setMapperClass(TokenizerMapper.class);
-
-        //合并输出，减少mapper到reducer的数据传输
+        //合并输出，reducer类型。减少mapper到reducer的数据传输 此处使用和reduceclass 相同的 IntSumReducer 处理结果和最终结果一样
         job.setCombinerClass(IntSumReducer.class);
         //处理Reducer
         job.setReducerClass(IntSumReducer.class);
         //shezhi reducer数量 设置为0
-        job.setNumReduceTasks(ThreadLocalRandom.current().nextInt(2));
+        job.setNumReduceTasks(1);//ThreadLocalRandom.current().nextInt(2));
         //输出 k-v 类型
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
@@ -78,7 +76,7 @@ public class WordCount {
         return job;
     }
 
-    public static final String[] path = new String[]{"hdfs://localhost:9000/test/hadoop/capacity-scheduler.xml", "hdfs://localhost:9000/test/out/"};
+    public static final String[] path = new String[]{"hdfs://localhost:9000/test/hadoop/core.xml", "hdfs://localhost:9000/test/out/"};
 
     public static void main(String[] args) throws Exception {
         if(args == null || args.length < 2){

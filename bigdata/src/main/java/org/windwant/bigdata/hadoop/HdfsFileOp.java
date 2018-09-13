@@ -4,7 +4,9 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.util.Progressable;
+import org.apache.hadoop.util.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,12 +135,12 @@ public class HdfsFileOp {
             in = fs.open(new Path(FILE_URL));
             System.out.println("--------------------InputStream-------------------");
             IOUtils.copyBytes(in, System.out, 4096, false);
-            fin = fs.open(new Path(FILE_URL));
-            System.out.println("--------------------FSDataInputStream-------------------");
-            IOUtils.copyBytes(fin, System.out, 4096, false);
-            fin.seek(0);
-            System.out.println("--------------------FSDataInputStream seek again-------------------");
-            IOUtils.copyBytes(fin, System.out, 4096, false);
+//            fin = fs.open(new Path(FILE_URL));
+//            System.out.println("--------------------FSDataInputStream-------------------");
+//            IOUtils.copyBytes(fin, System.out, 4096, false);
+//            fin.seek(0);
+//            System.out.println("--------------------FSDataInputStream seek again-------------------");
+//            IOUtils.copyBytes(fin, System.out, 4096, false);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {

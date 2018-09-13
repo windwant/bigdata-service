@@ -1,1 +1,5 @@
 .iml
+.idea/*
+bigdata/target/*
+common-util/target/*
+elasticjob/target/*

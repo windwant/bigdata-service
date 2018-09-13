@@ -49,7 +49,7 @@ public class KafkaStringMsgConsumer {
         logger.info("metrics {}", metrics);
 
         while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
+            ConsumerRecords<String, String> records = consumer.poll(1);
             for (ConsumerRecord<String, String> record : records) {
                 logger.info(record.toString());
             }

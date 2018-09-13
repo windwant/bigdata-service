@@ -14,6 +14,7 @@ public class MySimpleJob implements SimpleJob {
 
     private static final Logger logger = LoggerFactory.getLogger(MySimpleJob.class);
     public void execute(ShardingContext shardingContext) {
-        logger.info("msg: {}", Constants.getRandomCity());
+        logger.info("{} {} {}", Constants.genRandomIp(), Constants.genRandomRequest(), Constants.getRandomMethod());
+
     }
 }
