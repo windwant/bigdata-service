@@ -30,7 +30,7 @@ public class RandomInputSpout extends BaseRichSpout {
     public void nextTuple() {
         Utils.sleep(2000);
         String[] sentences = new String[]{
-                "A", "B", "C", "D", "E"};
+                "I want sth", "Let me go", "Oh my god", "View sth", "ET want god do sth"};
         String sentence = sentences[random.nextInt(sentences.length)];
         // 使用emit方法进行Tuple发布，参数用Values申明
         spoutOutputCollector.emit(new Values(sentence.trim().toLowerCase()));
@@ -44,7 +44,7 @@ public class RandomInputSpout extends BaseRichSpout {
 
     // 声明字段
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("word"));
+        declarer.declare(new Fields("value"));
     }
 
 }

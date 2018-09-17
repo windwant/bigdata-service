@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="log-path">logs</Property>
+        <Property name="log-level">info</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${log-path}/test.log"
+                     filePattern="${log-path}/${date:yyyy-MM}/test-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout charset="UTF-8"
+                           pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <Flume name="Flume" type="avro">
+            <Agent host="localhost" port="4444"/>
+            <RFC5424Layout enterpriseNumber="18060" includeMDC="true" appName="MyApp"/>
+        </Flume>
+    </Appenders>
+ 
+    <Loggers>
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="RollingFile"/>
+            <appender-ref ref="Flume"/>
+        </root>
+        <Logger name="org.windwant.bigdata" level="${log-level}"/>
+    </Loggers>
+</Configuration>

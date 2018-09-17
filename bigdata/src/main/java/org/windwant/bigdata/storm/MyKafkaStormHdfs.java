@@ -6,8 +6,6 @@ import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
-import org.apache.storm.kafka.spout.KafkaSpout;
-import org.apache.storm.kafka.spout.KafkaSpoutConfig;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 
@@ -33,17 +31,16 @@ public class MyKafkaStormHdfs {
     private static final String testTopic = "partition_test"; //测试主题
 
     public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException, InterruptedException, AuthorizationException {
-
-        KafkaSpoutConfig.Builder kbuilder = KafkaSpoutConfig.builder(bootstrapServers, testTopic);
-
         //TopologyBuilder是构建拓扑的类，用于指定执行的拓扑。拓扑底层是Thrift结构，由于Thrift API非常冗长，使用TopologyBuilder可以极大地简化建立拓扑的过程
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("kafka-reader", new KafkaSpout(kbuilder.build()), 5);//id为kafka-reader 并行度为5
-        //builder.setSpout("kafka-reader", new RandomSentenceSpout(), 3);
+//        builder.setSpout("kafka-reader", MySpoutUtil.getKafkaSpout(bootstrapServers, testTopic), 5);//id为kafka-reader 并行度为5
+        builder.setSpout("kafka-reader", new RandomInputSpout(), 2);
         //builder.setBolt("printBolt",new PrintBolt(),2).localOrShuffleGrouping("kafka-reader");
         builder.setBolt("word-splitter", new SplitWordBolt(), 2).shuffleGrouping("kafka-reader");
         builder.setBolt("word-counter", new CountWordBolt()).fieldsGrouping("word-splitter", new Fields("word"));
-        builder.setBolt("hdfs-bolt", new ToHdfsBolt(), 2).shuffleGrouping("word-counter");
+//        builder.setBolt("hdfs-bolt", new ToHdfsBolt(), 2).shuffleGrouping("word-counter");
+//        builder.setBolt("redis-bolt", MyBoltUtil.getRedisStoreBolt(), 2).shuffleGrouping("word-counter");
+        builder.setBolt("mongo-bolt", MyBoltUtil.getMongoInsertBolt(), 2).shuffleGrouping("word-counter");
 
         Config conf = new Config();
         conf.put(Config.TOPOLOGY_TRANSFER_BUFFER_SIZE, 32);

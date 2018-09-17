@@ -210,6 +210,18 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.storm</groupId>
+      <artifactId>storm-redis</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.storm</groupId>
+      <artifactId>storm-mongodb</artifactId>
+      <version>1.2.2</version>
+    </dependency>
+
   </dependencies>
 
   <build>
