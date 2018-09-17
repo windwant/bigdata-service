@@ -36,6 +36,8 @@ public class KafkaEntityMsgProducer {
         props.put("key.serializer", config.getString("key.serializer"));
         props.put("request.required.acks", config.getString("request.required.acks"));
         props.put("bootstrap.servers", config.getString("bootstrap.servers"));
+        props.put("partitioner.class", config.getString("partitioner.class"));
+        props.put("value.serializer.encoding", config.getString("value.serializer.encoding"));
     }
 
     public void start(){

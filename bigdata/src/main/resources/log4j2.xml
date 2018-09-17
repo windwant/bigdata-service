@@ -22,10 +22,10 @@
             <DefaultRolloverStrategy max="20"/>
         </RollingFile>
 
-        <Flume name="Flume" type="avro">
-            <Agent host="localhost" port="4444"/>
-            <RFC5424Layout enterpriseNumber="18060" includeMDC="true" appName="MyApp"/>
-        </Flume>
+        <!--<Flume name="Flume" type="avro">-->
+            <!--<Agent host="localhost" port="4444"/>-->
+            <!--<RFC5424Layout enterpriseNumber="18060" includeMDC="true" appName="MyApp"/>-->
+        <!--</Flume>-->
 
     </Appenders>
  

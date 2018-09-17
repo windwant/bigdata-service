@@ -93,3 +93,17 @@ Topologies execute across one or more worker processes. Each worker process is a
 Resources:
 
 Config.TOPOLOGY_WORKERS: this config sets the number of workers to allocate for executing the topology
+
+
+
+storm:启动
+
+./storm nimbus
+
+./storm supervisor
+
+启动ui：
+
+./storm ui
+
+访问：http://localhost:8080
