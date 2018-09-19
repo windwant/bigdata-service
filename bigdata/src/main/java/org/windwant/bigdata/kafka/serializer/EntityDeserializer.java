@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * 对象反序列化
+ * 接收实体类消息，反序列化
  * Created by Administrator on 18-7-31.
  */
 public class EntityDeserializer implements Deserializer {
@@ -19,9 +20,8 @@ public class EntityDeserializer implements Deserializer {
 
     @Override
     public Object deserialize(String s, byte[] bytes) {
-        try {
-            ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
-            ObjectInputStream in = new ObjectInputStream(bin);
+        ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
+        try ( ObjectInputStream in = new ObjectInputStream(bin)){
             return in.readObject();
         } catch (IOException e) {
             throw new SerializationException("IO Error when deserializing Object from byte[] ");

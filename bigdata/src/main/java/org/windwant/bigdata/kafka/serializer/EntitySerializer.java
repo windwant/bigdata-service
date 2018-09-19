@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * 对象序列化
+ * 发送对象实体消息 序列化使用
  * Created by Administrator on 18-7-31.
  */
 public class EntitySerializer implements Serializer {
@@ -18,9 +19,8 @@ public class EntitySerializer implements Serializer {
 
     @Override
     public byte[] serialize(String topic, Object data) {
-        try {
-            ByteArrayOutputStream bout = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(bout);
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try(ObjectOutputStream out = new ObjectOutputStream(bout)) {//资源释放
             out.writeObject(data);
             return bout.toByteArray();
         } catch (IOException e) {

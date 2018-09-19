@@ -42,7 +42,7 @@ public class KafkaStringMsgConsumer {
 
     public void  start(){
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("partition_test")); //storm-topic streams-wordcount-output
+        consumer.subscribe(Arrays.asList("streams-wordcount-output")); //storm-topic streams-wordcount-output
         Map topics = consumer.listTopics();
         logger.info("topic list {}", topics);
         Map metrics = consumer.metrics();

@@ -46,7 +46,7 @@ public class KafkaEntityMsgProducer {
             for(int i = 0; i < Integer.MAX_VALUE; i++) { // //storm-topic
                 Payload payload = new Payload();
                 payload.setStatus(i);
-                payload.setCause(Constants.getRandomCity());
+                payload.setCause(Constants.getRandomCity(5));
                 ProducerRecord record = new ProducerRecord<>("payload_t", "msg", payload);
                 logger.info("producer send, result: {}, msg: {}", producer.send(record).get(), record);
                 Thread.sleep(1000);
