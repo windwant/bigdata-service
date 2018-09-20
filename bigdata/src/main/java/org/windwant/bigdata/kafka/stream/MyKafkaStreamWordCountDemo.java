@@ -1,12 +1,12 @@
-package org.windwant.bigdata.kafka;
+package org.windwant.bigdata.kafka.stream;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.ValueMapper;
+import org.apache.kafka.streams.kstream.*;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -42,19 +42,24 @@ public class MyKafkaStreamWordCountDemo {
 
         StreamsBuilder builder = new StreamsBuilder();
 
-        //消费流
+        //由特定kafka主题构造消费流
         KStream<String, String> source = builder.stream("partition_test");
-//        KTable<String, Long> counts =
-
-        source.flatMapValues(new ValueMapper<String, Iterable<String>>() {
-            @Override
-            public Iterable<String> apply(String value) {
-                return Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\s+"));
-            }
-        }).to("streams-wordcount-output");
+        KTable<String, Long> counts = source
+                //消息处理 msg：I want sth ==> msg: I; msg: want; msg: sth
+                .flatMapValues(value -> {
+                    return Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+"));
+                })
+                //根据消息内容
+                .groupBy((key, word) -> word)
+                //Materialized用于实例化state store
+                //Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>.as("counts-store")
+                //统计累计更新
+                .count(Materialized.as("counts-store"));
         // need to override value serde to Long type
-//        counts.toStream().to("streams-wordcount-output", Produced.with(Serdes.String(), Serdes.Long()));
+        //KTable转换为KStream并输出到Kafka主题，输出消息类型 key：String，value：Long
+        counts.toStream().to("streams-wordcount-output", Produced.with(Serdes.String(), Serdes.Long()));
 
+        //由StreamBuilder构造KafkaStream
         final KafkaStreams streams = new KafkaStreams(builder.build(), props);
         final CountDownLatch latch = new CountDownLatch(1);
 

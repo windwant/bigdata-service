@@ -51,7 +51,9 @@ public class KafkaStringMsgConsumer {
         while (true) {
             ConsumerRecords<String, String> records = consumer.poll(1);
             for (ConsumerRecord<String, String> record : records) {
-                logger.info(record.toString());
+                if(record.partition() == 0) {
+                    logger.info("topic: {}, partition: {}, offset: {}, key: {}, value: {}", record.topic(), record.partition(), record.offset(), record.key(), record.value());
+                }
             }
         }
     }
