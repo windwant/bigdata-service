@@ -6,8 +6,11 @@ import org.apache.storm.StormSubmitter;
 import org.apache.storm.generated.AlreadyAliveException;
 import org.apache.storm.generated.AuthorizationException;
 import org.apache.storm.generated.InvalidTopologyException;
+import org.apache.storm.generated.Nimbus;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
+
+import java.util.Arrays;
 
 /**
  * kafka消息生成方式：
@@ -39,24 +42,28 @@ public class MyKafkaStormHdfs {
         builder.setBolt("word-splitter", new SplitWordBolt(), 2).shuffleGrouping("kafka-reader");
         builder.setBolt("word-counter", new CountWordBolt()).fieldsGrouping("word-splitter", new Fields("word"));
 //        builder.setBolt("hdfs-bolt", new ToHdfsBolt(), 2).shuffleGrouping("word-counter");
-//        builder.setBolt("redis-bolt", MyBoltUtil.getRedisStoreBolt(), 2).shuffleGrouping("word-counter");
-        builder.setBolt("mongo-bolt", MyBoltUtil.getMongoInsertBolt(), 2).shuffleGrouping("word-counter");
+        builder.setBolt("redis-bolt", MyBoltUtil.getRedisStoreBolt(), 2).shuffleGrouping("word-counter");
+//        builder.setBolt("mongo-bolt", MyBoltUtil.getMongoInsertBolt(), 2).shuffleGrouping("word-counter");
 
         Config conf = new Config();
         conf.put(Config.TOPOLOGY_TRANSFER_BUFFER_SIZE, 32);
         conf.put(Config.TOPOLOGY_EXECUTOR_RECEIVE_BUFFER_SIZE, 16384);
         conf.put(Config.TOPOLOGY_EXECUTOR_SEND_BUFFER_SIZE, 16384);
 
-        String name = MyKafkaStormHdfs.class.getSimpleName();
+        String name = MyKafkaStormHdfs.class.getSimpleName() + System.currentTimeMillis();
+        args = new String[]{"localhost"};
         if (args != null && args.length > 0) {
-            conf.put(Config.NIMBUS_HOST, args[0]);
+            conf.put(Config.NIMBUS_SEEDS, Arrays.asList("localhost"));
             conf.setNumWorkers(3);
+            System.setProperty("storm.jar", "E:\\javapro\\bigdata-service\\bigdata\\target\\bigdata-1.0-SNAPSHOT.jar");
             StormSubmitter.submitTopologyWithProgressBar(name, conf, builder.createTopology());
+
         } else {
             conf.setMaxTaskParallelism(3);
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology(name, conf, builder.createTopology());
-            Thread.sleep(1000000);
+            Thread.sleep(30000);
+            cluster.killTopology(name);
             cluster.shutdown();
         }
     }
