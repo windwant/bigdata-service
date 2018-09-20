@@ -7,6 +7,7 @@ import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.*;
+import org.apache.kafka.streams.state.KeyValueStore;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -44,20 +45,18 @@ public class MyKafkaStreamWordCountDemo {
 
         //由特定kafka主题构造消费流
         KStream<String, String> source = builder.stream("partition_test");
-        KTable<String, Long> counts = source
-                //消息处理 msg：I want sth ==> msg: I; msg: want; msg: sth
-                .flatMapValues(value -> {
+        source.flatMapValues(value -> {
                     return Arrays.asList(value.toLowerCase(Locale.getDefault()).split("\\W+"));
                 })
-                //根据消息内容
                 .groupBy((key, word) -> word)
-                //Materialized用于实例化state store
-                //Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>.as("counts-store")
+                //Materialized用于实例化state store，存放结果
                 //统计累计更新
-                .count(Materialized.as("counts-store"));
-        // need to override value serde to Long type
-        //KTable转换为KStream并输出到Kafka主题，输出消息类型 key：String，value：Long
-        counts.toStream().to("streams-wordcount-output", Produced.with(Serdes.String(), Serdes.Long()));
+                // The Materialized store is always of type <Bytes, byte[]> as this is the format of the inner most store.
+                .count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"))
+                //KTable转换为KStream
+                .toStream()
+                //输出到Kafka主题，输出消息类型 key：String，value：Long need to override value serde to Long type
+                .to("streams-wordcount-output", Produced.with(Serdes.String(), Serdes.Long()));
 
         //由StreamBuilder构造KafkaStream
         final KafkaStreams streams = new KafkaStreams(builder.build(), props);
