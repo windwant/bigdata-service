@@ -38,7 +38,7 @@ public class MyKafkaStreamWordCountProcessorDemo {
         @Override
         public Processor<String, String> get() {
             return new Processor<String, String>() {
-                //Process上下文环境
+                //Process上下文环境 元数据（数据记录，kafka topic partition message offset
                 private ProcessorContext context;
                 private KeyValueStore<String, Integer> kvStore;
 
@@ -46,8 +46,8 @@ public class MyKafkaStreamWordCountProcessorDemo {
                 @SuppressWarnings("unchecked")
                 public void init(final ProcessorContext context) {
                     this.context = context;
-                    //Processor定时任务，每隔1s stream时间，
-                    this.context.schedule(1000, PunctuationType.STREAM_TIME, timestamp -> {
+                    //Processor定时任务，每隔1s stream时间（record时间），WALL_CLOCK_TIME（系统时间）
+                    this.context.schedule(1000, PunctuationType.WALL_CLOCK_TIME, timestamp -> {
                         try (KeyValueIterator<String, Integer> iter = kvStore.all()) {
                             //输出间隔统计结果 间隔内消息汇总
                             System.out.println("----------- " + timestamp + " ----------- ");
@@ -58,6 +58,7 @@ public class MyKafkaStreamWordCountProcessorDemo {
                             }
                         }
                     });
+
                     this.kvStore = (KeyValueStore<String, Integer>) context.getStateStore("Counts");
                 }
 
@@ -74,6 +75,7 @@ public class MyKafkaStreamWordCountProcessorDemo {
                         }
                     }
 
+                    //提交当前处理进程
                     context.commit();
                 }
 
@@ -102,18 +104,17 @@ public class MyKafkaStreamWordCountProcessorDemo {
         //用于构造KStream进行下一步消息处理
         Topology builder = new Topology();
         //消费kafka主题 partition_test
-        builder.addSource("Source", "partition_test");
-        //添加Processor，名称 Process，上一节点 Source
-        builder.addProcessor("Process", new MyProcessorSupplier(), "Source");
-        //添加状态存储，用于 Processor 使用，store名称为Counts，可以使用store的Processor为Process
-        builder.addStateStore(Stores.keyValueStoreBuilder(
-                Stores.inMemoryKeyValueStore("Counts"),
+        builder.addSource("Source", "partition_test")
+            //添加Processor，名称 Process，上一节点 Source
+            .addProcessor("Process", new MyProcessorSupplier(), "Source")
+            //添加状态存储，用于 Processor 使用，store名称为Counts，可以使用store的Processor为Process
+            .addStateStore(Stores.keyValueStoreBuilder(
+                Stores.inMemoryKeyValueStore("Counts"),//内存存储
                 Serdes.String(),
                 Serdes.Integer()),
-                "Process");
-
-        //添加输出，主题 上一节点 Process
-        builder.addSink("Sink", "streams-wordcount-output", "Process");
+                "Process")
+            //添加输出，主题 上一节点 Process
+            .addSink("Sink", "streams-wordcount-output", "Process");
 
         //构造KafkaStream
         final KafkaStreams streams = new KafkaStreams(builder, props);
