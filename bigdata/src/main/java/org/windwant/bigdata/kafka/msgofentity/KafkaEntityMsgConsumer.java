@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.windwant.bigdata.kafka.model.Payload;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -31,6 +32,7 @@ public class KafkaEntityMsgConsumer {
         //自动保存
         config.setAutoSave(true);
         props.put("value.deserializer", config.getString("value.entity.deserializer"));
+        props.put("value.type.class", Payload.class);
         props.put("key.deserializer", config.getString("key.deserializer"));
         props.put("bootstrap.servers", config.getString("bootstrap.servers"));
         props.put("group.id", config.getString("group.id"));
@@ -44,6 +46,7 @@ public class KafkaEntityMsgConsumer {
             ConsumerRecords<String, String> records = consumer.poll(100);
             for (ConsumerRecord<String, String> record : records) {
                 logger.info(ToStringBuilder.reflectionToString(record));
+                logger.info("topic: {}, partition: {}, offset: {}, key: {}, value: {}", record.topic(), record.partition(), record.offset(), record.key(), record.value());
             }
         }
     }

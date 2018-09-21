@@ -33,6 +33,7 @@ public class KafkaEntityMsgProducer {
         config.setReloadingStrategy(new FileChangedReloadingStrategy());
         config.setAutoSave(true);
         props.put("value.serializer", config.getString("value.entity.serializer"));
+        props.put("value.type.class", Payload.class);
         props.put("key.serializer", config.getString("key.serializer"));
         props.put("request.required.acks", config.getString("request.required.acks"));
         props.put("bootstrap.servers", config.getString("bootstrap.servers"));
